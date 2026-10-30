@@ -10,5 +10,5 @@ ailia TFLite Runtime is a TensorFlow Lite compatible inference engine. Written i
 
 ## API specification
 
-https://github.com/axinc-ai/ailia-tflite-runtime
+https://github.com/ailia-ai/ailia-tflite-runtime
 
