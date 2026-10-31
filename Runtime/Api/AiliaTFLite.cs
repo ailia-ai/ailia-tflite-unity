@@ -470,6 +470,36 @@ public class AiliaTFLite
     * @brief VNNI
     */
     public const UInt32  AILIA_TFLITE_CPU_FEATURES_VNNI                =(0x00000020);
+    /**
+    * \~japanese
+    * @def AILIA_TFLITE_CPU_FEATURES_AVX512
+    * @brief AVX512
+    *
+    * \~english
+    * @def AILIA_TFLITE_CPU_FEATURES_AVX512
+    * @brief AVX512
+    */
+    public const UInt32  AILIA_TFLITE_CPU_FEATURES_AVX512              =(0x00000040);
+    /**
+    * \~japanese
+    * @def AILIA_TFLITE_CPU_FEATURES_I8MM
+    * @brief I8MM
+    *
+    * \~english
+    * @def AILIA_TFLITE_CPU_FEATURES_I8MM
+    * @brief I8MM
+    */
+    public const UInt32  AILIA_TFLITE_CPU_FEATURES_I8MM                =(0x00000080);
+    /**
+    * \~japanese
+    * @def AILIA_TFLITE_CPU_FEATURES_DOTPROD
+    * @brief ARM DOTPROD
+    *
+    * \~english
+    * @def AILIA_TFLITE_CPU_FEATURES_DOTPROD
+    * @brief ARM DOTPROD
+    */
+    public const UInt32  AILIA_TFLITE_CPU_FEATURES_DOTPROD             =(0x00000100);
 
     /* Native Binary 定義 */
 
@@ -1631,6 +1661,68 @@ public class AiliaTFLite
     */
     [DllImport(LIBRARY_NAME)]
     public static extern Int32 ailiaTFLiteGetScratchBufferUsage(IntPtr instance, ref UInt64 int_buffer_size, ref UInt64 mid_buffer_size, ref UInt64 ext_buffer_size);
+
+    /****************************************************************
+    * スレッド設定API
+    **/
+
+    /**
+    * \~japanese
+    * @brief グローバルなスレッドプールのスレッド数を設定します
+    * @param num_threads   スレッド数（1以上）
+    * @return
+    *   成功した場合はAILIA_TFLITE_STATUS_SUCCESSを返します。
+    *   失敗した場合はAILIA_TFLITE_STATUS_XXXを返します。
+    * @details
+    *   デフォルトでは自動設定となります。
+    *   最初の ailiaTFLiteCreate の前に呼び出す必要があります。
+    *   ailiaTFLiteCreate以降に呼び出すとAILIA_TFLITE_STATUS_INVALID_ARGUMENTを返します。
+    *
+    * \~english
+    * @brief Set the number of threads for the global thread pool.
+    * @param num_threads   Number of threads (1 or more)
+    * @return
+    *   Returns AILIA_TFLITE_STATUS_SUCCESS on success.
+    *   Returns AILIA_TFLITE_STATUS_XXX on failure.
+    * @details
+    *   By default, the thread count is determined automatically.
+    *   Must be called before the first ailiaTFLiteCreate call.
+    *   If called after ailiaTFLiteCreate, it returns AILIA_TFLITE_STATUS_INVALID_ARGUMENT.
+    */
+    [DllImport(LIBRARY_NAME)]
+    public static extern Int32 ailiaTFLiteThreadPoolSetNumThreads(Int32 num_threads);
+
+    /**
+    * \~japanese
+    * @brief インスタンスの推論に使用するスレッド数を設定します
+    * @param instance      ailia TFLite runtimeインスタンスポインター
+    * @param num_threads   スレッド数（1以上）
+    * @return
+    *   成功した場合はAILIA_TFLITE_STATUS_SUCCESSを返します。
+    *   失敗した場合はAILIA_TFLITE_STATUS_XXXを返します。
+    * @details
+    *   インスタンスの推論に使用するスレッド数を指定します。
+    *   デフォルトではスレッドプールのスレッド数を使用します。
+    *   スレッドプールのスレッド数よりも大きい値を設定した場合、スレッドプールのスレッド数が設定されます。
+    *   ailiaTFLiteAllocateTensors の前に呼び出す必要があります。
+    *   ailiaTFLiteAllocateTensors以降に呼び出すとAILIA_TFLITE_STATUS_INVALID_ARGUMENTを返します。
+    *
+    * \~english
+    * @brief Set the number of threads used for inference per instance.
+    * @param instance      ailia TFLite runtime instance pointer
+    * @param num_threads   Number of threads (1 or more)
+    * @return
+    *   Returns AILIA_TFLITE_STATUS_SUCCESS on success.
+    *   Returns AILIA_TFLITE_STATUS_XXX on failure.
+    * @details
+    *   Sets the number of threads used for inference in the specified instance.
+    *   By default, the value from the global thread pool is used.
+    *   If a value larger than the number of threads in the thread pool is set, the number of threads in the thread pool will be used.
+    *   Must be called before ailiaTFLiteAllocateTensors.
+    *   If called after ailiaTFLiteAllocateTensors, it returns AILIA_TFLITE_STATUS_INVALID_ARGUMENT.
+    */
+    [DllImport(LIBRARY_NAME)]
+    public static extern Int32 ailiaTFLiteSetNumThreads(IntPtr instance, Int32 num_threads);
 
     /****************************************************************
     * MKL設定API
